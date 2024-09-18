@@ -5,11 +5,10 @@ declare global {
 }
 
 type Payload = {
-  autopayments: 1 | 0;
-  limit: 1 | 0;
-  limit_sum: number;
-  insurance: 1 | 0;
-  email: 1 | 0;
+  credit_sum: number;
+  credit_period: number;
+  is_insurance: 1 | 0;
+  is_good_rate: 1 | 0;
 };
 
 export const sendDataToGA = async (payload: Payload) => {
@@ -20,11 +19,11 @@ export const sendDataToGA = async (payload: Payload) => {
     }-${now.getDate()} ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`;
 
     await fetch(
-      'https://script.google.com/macros/s/AKfycby5o6NHvbauTAj8l86WU7W7V8JuXwTtnUAFPlo5ZPWsoEQXsk3I8MaBpkia6uoNT0RW/exec',
+      'https://script.google.com/macros/s/AKfycbxcHgrbrpJDGqapkLM5baYBX40Q4CotD5cxxU-4_mdpm86bxbBXSESz1AkW_G-ubZWb/exec',
       {
         redirect: 'follow',
         method: 'POST',
-        body: JSON.stringify({ date, ...payload, variant: 'variant1' }),
+        body: JSON.stringify({ date, ...payload, variant: 'var1' }),
         headers: {
           'Content-Type': 'text/plain;charset=utf-8',
         },

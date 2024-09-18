@@ -10,6 +10,7 @@ import car from './assets/car.png';
 import { LS, LSKeys } from './ls';
 import { appSt } from './style.css';
 import { ThxLayout } from './thx/ThxLayout';
+import { sendDataToGA } from './utils/events';
 import { getYearString } from './utils/years';
 
 const min = 10_000;
@@ -53,24 +54,19 @@ export const App = () => {
   };
 
   const submit = useCallback(() => {
-    // if (!accountNumber) {
-    //   setError('Укажите номер лицевого счёта');
-    //   return;
-    // }
     setLoading(true);
-    setThx(true);
-    setLoading(false);
 
-    // sendDataToGA({
-    //   autopayments: Number(checked) as 1 | 0,
-    //   limit: Number(checked2) as 1 | 0,
-    //   limit_sum: limit ?? 0,
-    //   insurance: Number(checked3) as 1 | 0,
-    //   email: email ? 1 : 0,
-    // }).then(() => {
-    //   LS.setItem(LSKeys.ShowThx, true);
-    // });
-  }, []);
+    sendDataToGA({
+      credit_period: selectedYear,
+      credit_sum: numberValue,
+      is_good_rate: Number(checked2) as 1 | 0,
+      is_insurance: Number(checked) as 1 | 0,
+    }).then(() => {
+      LS.setItem(LSKeys.ShowThx, true);
+      setThx(true);
+      setLoading(false);
+    });
+  }, [selectedYear, numberValue, checked, checked2]);
 
   if (thxShow) {
     return <ThxLayout />;
