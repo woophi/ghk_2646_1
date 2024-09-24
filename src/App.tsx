@@ -149,14 +149,6 @@ export const App = () => {
             </div>
 
             <div className={appSt.btnContainer}>
-              <div>
-                <Typography.TitleResponsive font="system" tag="h2" view="xsmall" weight="bold">
-                  29%
-                </Typography.TitleResponsive>
-                <Typography.Text view="primary-medium" color="secondary-inverted" defaultMargins={false}>
-                  Ставка
-                </Typography.Text>
-              </div>
               <CDNIcon name="glyph_chevron-right_m" />
             </div>
           </div>
