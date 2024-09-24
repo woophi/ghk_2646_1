@@ -13,8 +13,8 @@ import { ThxLayout } from './thx/ThxLayout';
 import { sendDataToGA } from './utils/events';
 import { getYearString } from './utils/years';
 
-const min = 10_000;
-const max = 200_000;
+const min = 300_000;
+const max = 800_000;
 const step = 1000;
 const range: SliderInputProps['range'] = {
   min: [min],
@@ -32,13 +32,19 @@ const pips: SliderInputProps['pips'] = {
 
 const years = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
+const calculatePayment = (principal: number, interestRate: number, term: number) => {
+  const monthlyInterestRate = interestRate / 12;
+  const exponent = Math.pow(1 + monthlyInterestRate, term);
+
+  return Math.ceil((principal * monthlyInterestRate * exponent) / (exponent - 1));
+};
+
 export const App = () => {
   const [loading, setLoading] = useState(false);
   const [checked, setChecked] = useState(false);
-  const [checked2, setChecked2] = useState(false);
-  const [selectedYear, setYear] = useState(1);
+  const [selectedYear, setYear] = useState(12);
   const [thxShow, setThx] = useState(LS.getItem(LSKeys.ShowThx, false));
-  const [value, setValue] = useState<number | string>(20_000);
+  const [value, setValue] = useState<number | string>(500_000);
 
   const handleInputChange: SliderInputProps['onInputChange'] = (_, { value }) => {
     setValue(typeof value === 'string' ? Number(value.replace(/\s+/g, '')) : value);
@@ -59,14 +65,13 @@ export const App = () => {
     sendDataToGA({
       credit_period: selectedYear,
       credit_sum: numberValue,
-      is_good_rate: Number(checked2) as 1 | 0,
       is_insurance: Number(checked) as 1 | 0,
     }).then(() => {
       LS.setItem(LSKeys.ShowThx, true);
       setThx(true);
       setLoading(false);
     });
-  }, [selectedYear, numberValue, checked, checked2]);
+  }, [selectedYear, numberValue, checked]);
 
   if (thxShow) {
     return <ThxLayout />;
@@ -128,16 +133,6 @@ export const App = () => {
             onChange={() => setChecked(prevState => !prevState)}
           />
         </div>
-        <div className={appSt.row}>
-          <Switch
-            block
-            reversed
-            checked={checked2}
-            label="Выгодная ставка"
-            className={appSt.switchItem}
-            onChange={() => setChecked2(prevState => !prevState)}
-          />
-        </div>
       </div>
       <Gap size={96} />
 
@@ -146,7 +141,7 @@ export const App = () => {
           <div className={appSt.btnContainer}>
             <div>
               <Typography.TitleResponsive font="system" tag="h2" view="xsmall" weight="bold">
-                29 700 ₽
+                {calculatePayment(numberValue, 0.29, selectedYear).toLocaleString('ru')} ₽
               </Typography.TitleResponsive>
               <Typography.Text view="primary-medium" color="secondary-inverted" defaultMargins={false}>
                 Платеж в месяц
@@ -156,7 +151,7 @@ export const App = () => {
             <div className={appSt.btnContainer}>
               <div>
                 <Typography.TitleResponsive font="system" tag="h2" view="xsmall" weight="bold">
-                  13,5%
+                  29%
                 </Typography.TitleResponsive>
                 <Typography.Text view="primary-medium" color="secondary-inverted" defaultMargins={false}>
                   Ставка
