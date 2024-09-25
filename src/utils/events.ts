@@ -7,7 +7,6 @@ declare global {
 type Payload = {
   credit_sum: number;
   credit_period: number;
-  is_insurance: 1 | 0;
 };
 
 export const sendDataToGA = async (payload: Payload) => {

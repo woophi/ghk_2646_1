@@ -2,7 +2,6 @@ import { ButtonMobile } from '@alfalab/core-components/button/mobile';
 import { CDNIcon } from '@alfalab/core-components/cdn-icon';
 import { Gap } from '@alfalab/core-components/gap';
 import { SliderInput, SliderInputProps } from '@alfalab/core-components/slider-input';
-import { Switch } from '@alfalab/core-components/switch';
 import { Typography } from '@alfalab/core-components/typography';
 import { useCallback, useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -41,7 +40,6 @@ const calculatePayment = (principal: number, interestRate: number, term: number)
 
 export const App = () => {
   const [loading, setLoading] = useState(false);
-  const [checked, setChecked] = useState(false);
   const [selectedYear, setYear] = useState(12);
   const [thxShow, setThx] = useState(LS.getItem(LSKeys.ShowThx, false));
   const [value, setValue] = useState<number | string>(500_000);
@@ -65,13 +63,12 @@ export const App = () => {
     sendDataToGA({
       credit_period: selectedYear,
       credit_sum: numberValue,
-      is_insurance: Number(checked) as 1 | 0,
     }).then(() => {
       LS.setItem(LSKeys.ShowThx, true);
       setThx(true);
       setLoading(false);
     });
-  }, [selectedYear, numberValue, checked]);
+  }, [selectedYear, numberValue]);
 
   if (thxShow) {
     return <ThxLayout />;
@@ -121,19 +118,6 @@ export const App = () => {
           </SwiperSlide>
         ))}
       </Swiper>
-      <div className={appSt.container}>
-        <div />
-        <div className={appSt.row}>
-          <Switch
-            block
-            reversed
-            checked={checked}
-            label="Страховка"
-            className={appSt.switchItem}
-            onChange={() => setChecked(prevState => !prevState)}
-          />
-        </div>
-      </div>
       <Gap size={96} />
 
       <div className={appSt.bottomBtn}>
