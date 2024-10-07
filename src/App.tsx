@@ -41,7 +41,7 @@ const calculatePayment = (principal: number, interestRate: number, term: number)
 export const App = () => {
   const [loading, setLoading] = useState(false);
   const [selectedYear, setYear] = useState(12);
-  const [thxShow, setThx] = useState(LS.getItem(LSKeys.ShowThx, false));
+  const [thxShow] = useState(LS.getItem(LSKeys.ShowThx, false));
   const [value, setValue] = useState<number | string>(500_000);
 
   const handleInputChange: SliderInputProps['onInputChange'] = (_, { value }) => {
@@ -65,8 +65,9 @@ export const App = () => {
       credit_sum: numberValue,
     }).then(() => {
       LS.setItem(LSKeys.ShowThx, true);
-      setThx(true);
-      setLoading(false);
+      window.location.replace('https://alfa.me/p0r7na');
+      // setThx(true);
+      // setLoading(false);
     });
   }, [selectedYear, numberValue]);
 
